@@ -3,6 +3,7 @@ package com.ll.instagram.service;
 import com.ll.instagram.dto.request.SignUpRequest;
 import com.ll.instagram.dto.response.ProfileResponse;
 import com.ll.instagram.entity.User;
+import com.ll.instagram.repository.FollowRepository;
 import com.ll.instagram.repository.PostRepository;
 import com.ll.instagram.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+    private final FollowRepository followRepository;
 
     @Override
     @Transactional
@@ -43,7 +45,11 @@ public class UserServiceImpl implements UserService{
     public ProfileResponse getProfile(String username) {
         User user = userRepository.findByUsername(username).orElseThrow();
 
-        return ProfileResponse.from(user);
+        long postCount = postRepository.countByUserId(user.getId());
+        long followerCount = followRepository.countByFollowerId(user.getId());
+        long followingCount = followRepository.countByFollowingId(user.getId());
+
+        return ProfileResponse.from(user, postCount, followerCount, followingCount);
     }
 
     @Override
