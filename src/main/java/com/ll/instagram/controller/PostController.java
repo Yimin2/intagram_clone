@@ -1,9 +1,13 @@
 package com.ll.instagram.controller;
 
 
+import com.ll.instagram.dto.request.CommentRequest;
 import com.ll.instagram.dto.request.PostCreateRequest;
+import com.ll.instagram.dto.response.CommentResponse;
 import com.ll.instagram.dto.response.PostResponse;
 import com.ll.instagram.security.CustomUserDetails;
+import com.ll.instagram.service.CommentService;
+import com.ll.instagram.service.LikeService;
 import com.ll.instagram.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +17,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final CommentService commentService;
+    private final LikeService likeService;
 
 
     @GetMapping("/new")
@@ -38,9 +46,43 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
         PostResponse post = postService.getPost(id);
+        List<CommentResponse> comments = commentService.getComments(id);
+
         model.addAttribute("post", post);
+        model.addAttribute("commentRequest", new CommentRequest());
+        model.addAttribute("comments", comments);
+        model.addAttribute("liked", likeService.isLiked(id, userDetails.getId()));
+        model.addAttribute("likeCount", likeService.getLikeCount(id));
+
         return "post/detail";
+    }
+
+    @PostMapping("/{postId}/comments")
+    public String createComment(@PathVariable Long postId,
+                                @Valid @ModelAttribute CommentRequest commentRequest, BindingResult bindingResult,
+                                @AuthenticationPrincipal CustomUserDetails userDetails,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            PostResponse post = postService.getPost(postId);
+            List<CommentResponse> comments = commentService.getComments(postId);
+
+            model.addAttribute("post",post);
+            model.addAttribute("comments", comments);
+            model.addAttribute("commentRequest", commentRequest);
+            return "post/detail";
+        }
+
+        commentService.create(postId, commentRequest, userDetails.getId());
+
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/{id}/like")
+    public String toggleLike(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        likeService.toggleLike(id, userDetails.getId());
+
+        return "redirect:/posts/" + id;
     }
 }
