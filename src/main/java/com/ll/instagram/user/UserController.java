@@ -4,6 +4,7 @@ import com.ll.instagram.post.PostResponse;
 import com.ll.instagram.common.security.CustomUserDetails;
 import com.ll.instagram.follow.FollowService;
 import com.ll.instagram.post.PostService;
+import com.ll.instagram.profile.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,9 @@ public class UserController {
 
         boolean isFollowing = followService.isFollowing(userDetails.getId(), profile.getId());
         model.addAttribute("isFollowing", isFollowing);
+
+        boolean isOwner = userDetails.getUsername().equals(username);
+        model.addAttribute("isOwner", isOwner);
 
         return "user/profile";
     }

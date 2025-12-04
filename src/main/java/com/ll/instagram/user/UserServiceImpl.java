@@ -3,6 +3,7 @@ package com.ll.instagram.user;
 import com.ll.instagram.auth.SignUpRequest;
 import com.ll.instagram.follow.FollowRepository;
 import com.ll.instagram.post.PostRepository;
+import com.ll.instagram.profile.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,15 +33,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByUsername(username);
     }
 
-    @Override
-    public User findById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow();
-    }
 
     @Override
     public ProfileResponse getProfile(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = findByUsername(username);
 
         long postCount = postRepository.countByUserId(user.getId());
         long followerCount = followRepository.countByFollowingId(user.getId());
@@ -50,8 +46,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow();
+    }
+
+    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow();
+    }
+
+    @Override
+    public UserResponse getUserById(Long userId) {
+        return UserResponse.from(findById(userId));
     }
 }

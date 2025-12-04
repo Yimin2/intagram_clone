@@ -1,5 +1,6 @@
-package com.ll.instagram.user;
+package com.ll.instagram.profile;
 
+import com.ll.instagram.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
