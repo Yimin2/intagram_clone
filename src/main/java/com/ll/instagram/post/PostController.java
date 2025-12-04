@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,12 +33,14 @@ public class PostController {
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute PostCreateRequest postCreateRequest, BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public String create(@Valid @ModelAttribute PostCreateRequest postCreateRequest, BindingResult bindingResult,
+                         @AuthenticationPrincipal CustomUserDetails userDetails,
+                         @RequestParam(value = "image", required = false) MultipartFile image) {
         if (bindingResult.hasErrors()) {
             return "post/form";
         }
 
-        postService.create(postCreateRequest, userDetails.getId());
+        postService.create(postCreateRequest, image, userDetails.getId());
 
         return "redirect:/";
     }
@@ -57,15 +60,14 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/comments")
-    public String createComment(@PathVariable Long postId,
-                                @Valid @ModelAttribute CommentRequest commentRequest, BindingResult bindingResult,
-                                @AuthenticationPrincipal CustomUserDetails userDetails,
+    public String createComment(@PathVariable Long postId, @Valid @ModelAttribute CommentRequest commentRequest,
+                                BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails,
                                 Model model) {
         if (bindingResult.hasErrors()) {
             PostResponse post = postService.getPost(postId);
             List<CommentResponse> comments = commentService.getComments(postId);
 
-            model.addAttribute("post",post);
+            model.addAttribute("post", post);
             model.addAttribute("comments", comments);
             model.addAttribute("commentRequest", commentRequest);
             return "post/detail";
