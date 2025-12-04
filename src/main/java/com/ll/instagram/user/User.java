@@ -6,11 +6,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name= "users")
 @NoArgsConstructor
 public class User extends BaseEntity {
@@ -43,6 +41,11 @@ public class User extends BaseEntity {
         this.password = password;
         this.email = email;
         this.role = role != null ? role : Role.USER;
+        this.bio = bio;
+        this.name = name;
+    }
+
+    public void UpdateProfile(String bio, String name) {
         this.bio = bio;
         this.name = name;
     }
