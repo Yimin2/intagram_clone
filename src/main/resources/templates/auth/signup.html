@@ -28,11 +28,11 @@
 							</div>
 							<div class="mb-3">
 								<input type="text" th:field="*{name}" class="form-control"
-								       placeholder="성명">
+								       placeholder="이름">
 							</div>
 							<div class="mb-3">
 								<input type="text" th:field="*{username}" class="form-control"
-								       placeholder="사용자명"
+								       placeholder="사용자ID"
 								       th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('username')}"
 								     th:errors="*{username}"></div>

@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow();
 
         long postCount = postRepository.countByUserId(user.getId());
-        long followerCount = followRepository.countByFollowerId(user.getId());
-        long followingCount = followRepository.countByFollowingId(user.getId());
+        long followerCount = followRepository.countByFollowingId(user.getId());
+        long followingCount = followRepository.countByFollowerId(user.getId());
 
         return ProfileResponse.from(user, postCount, followerCount, followingCount);
     }
