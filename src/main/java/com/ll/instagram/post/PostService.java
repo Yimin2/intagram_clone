@@ -8,4 +8,5 @@ public interface PostService {
     PostResponse getPost(Long postId);
     List<PostResponse> getAllPosts();
     List<PostResponse> getPostsByUsername(String username);
+    List<PostResponse> getAllPostsWithStatus();
 }

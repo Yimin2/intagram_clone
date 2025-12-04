@@ -35,7 +35,8 @@ public class ProfileController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute ProfileUpdateRequest profileUpdateRequest, BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+    public String edit(@Valid @ModelAttribute ProfileUpdateRequest profileUpdateRequest, BindingResult bindingResult,
+                       @AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             UserResponse currentUser = userService.getUserById(userDetails.getId());
             model.addAttribute("currentUser", currentUser);
