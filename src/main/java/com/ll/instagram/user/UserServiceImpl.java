@@ -4,6 +4,7 @@ import com.ll.instagram.auth.SignUpRequest;
 import com.ll.instagram.follow.FollowRepository;
 import com.ll.instagram.post.PostRepository;
 import com.ll.instagram.profile.ProfileResponse;
+import com.ll.instagram.profile.ProfileUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,13 @@ public class UserServiceImpl implements UserService {
         long followingCount = followRepository.countByFollowerId(user.getId());
 
         return ProfileResponse.from(user, postCount, followerCount, followingCount);
+    }
+
+    @Override
+    @Transactional
+    public void updateProfile(Long userId, ProfileUpdateRequest profileUpdateRequest) {
+        User user = findById(userId);
+        user.UpdateProfile(profileUpdateRequest.getName(), profileUpdateRequest.getBio());
     }
 
     @Override
