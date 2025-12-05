@@ -15,4 +15,5 @@ public interface PostService {
     List<PostResponse> getAllPostsWithStatus();
     Slice<PostResponse> getFeedPosts(Long userId, Pageable pageable);
     Slice<PostResponse> getAllPostsPaging(Pageable pageable);
+    Slice<PostResponse> searchPost(String keyword, Pageable pageable);
 }

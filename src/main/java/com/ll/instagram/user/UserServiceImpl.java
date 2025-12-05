@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -77,5 +79,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(Long userId) {
         return UserResponse.from(findById(userId));
+    }
+
+    @Override
+    public List<UserResponse> searchUsers(String keyword) {
+        return userRepository.searchByKeyword(keyword)
+                .stream()
+                .map(UserResponse::from)
+                .toList();
     }
 }

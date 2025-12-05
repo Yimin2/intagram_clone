@@ -102,18 +102,14 @@ public class PostServiceImpl implements PostService {
         List<Long> followingIds = followRepository.findFollowingIdsByFollowerId(userId);
         Slice<Post> posts = postRepository.findFeedPostsByUserIds(followingIds, pageable);
 
-        List<PostResponse> content = fromDto(posts);
-
-        return new SliceImpl<>(content,pageable,posts.hasNext());
+        return new SliceImpl<>(fromDto(posts), pageable, posts.hasNext());
     }
 
     @Override
     public Slice<PostResponse> getAllPostsPaging(Pageable pageable) {
         Slice<Post> posts = postRepository.findAllByWithUserPaging(pageable);
 
-        List<PostResponse> content = fromDto(posts);
-
-        return new SliceImpl<>(content, pageable, posts.hasNext());
+        return new SliceImpl<>(fromDto(posts), pageable, posts.hasNext());
     }
 
     private List<PostResponse> fromDto(Slice<Post> posts) {
@@ -123,8 +119,16 @@ public class PostServiceImpl implements PostService {
                     long likeCount = likeRepository.countByPostId(post.getId());
                     long commentCount = commentRepository.countByPostId(post.getId());
 
-                    return  PostResponse.from(post, commentCount, likeCount);
-                }).toList();
+                    return PostResponse.from(post, commentCount, likeCount);
+                })
+                .toList();
         return content;
+    }
+
+    @Override
+    public Slice<PostResponse> searchPost(String keyword, Pageable pageable) {
+        Slice<Post> posts = postRepository.searchByKeyword(keyword, pageable);
+
+        return new SliceImpl<>(fromDto(posts), pageable, posts.hasNext());
     }
 }
