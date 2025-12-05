@@ -3,6 +3,7 @@ package com.ll.instagram.user;
 import com.ll.instagram.auth.SignUpRequest;
 import com.ll.instagram.profile.ProfileResponse;
 import com.ll.instagram.profile.ProfileUpdateRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     User register(SignUpRequest signUpRequest);
@@ -11,5 +12,5 @@ public interface UserService {
     ProfileResponse getProfile(String username);
     User findByUsername(String username);
     UserResponse getUserById(Long userId);
-    void updateProfile(Long userId, ProfileUpdateRequest profileUpdateRequest);
+    void updateProfile(Long userId, ProfileUpdateRequest profileUpdateRequest, MultipartFile profileImg);
 }
