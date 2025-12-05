@@ -1,5 +1,7 @@
 package com.ll.instagram.follow;
 
+import com.ll.instagram.common.exception.BusinessException;
+import com.ll.instagram.common.exception.ErrorCode;
 import com.ll.instagram.user.UserService;
 import com.ll.instagram.user.User;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class FollowServiceImpl implements FollowService {
         Optional<Follow> existingFollow = followRepository.findByFollowerIdAndFollowingId(followerId,
                 following.getId());
         if (follower.getId().equals(following.getId())) {
-            throw new RuntimeException("자기 자신은 팔로우 할 수 없습니다.");
+            throw new BusinessException(ErrorCode.SELF_FOLLOW);
         }
         if (existingFollow.isPresent()) {
             followRepository.delete(existingFollow.get());

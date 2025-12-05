@@ -2,6 +2,8 @@ package com.ll.instagram.user;
 
 import com.ll.instagram.auth.SignUpRequest;
 import com.ll.instagram.common.FileService;
+import com.ll.instagram.common.exception.BusinessException;
+import com.ll.instagram.common.exception.ErrorCode;
 import com.ll.instagram.follow.FollowRepository;
 import com.ll.instagram.post.PostRepository;
 import com.ll.instagram.profile.ProfileResponse;
@@ -67,13 +69,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow();
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override

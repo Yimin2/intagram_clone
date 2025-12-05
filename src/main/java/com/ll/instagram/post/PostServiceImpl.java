@@ -3,6 +3,8 @@ package com.ll.instagram.post;
 
 import com.ll.instagram.comment.CommentRepository;
 import com.ll.instagram.common.FileService;
+import com.ll.instagram.common.exception.BusinessException;
+import com.ll.instagram.common.exception.ErrorCode;
 import com.ll.instagram.follow.FollowRepository;
 import com.ll.instagram.like.LikeRepository;
 import com.ll.instagram.user.UserService;
@@ -58,7 +60,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post findById(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow();
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
     }
 
     @Override

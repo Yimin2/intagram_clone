@@ -1,5 +1,7 @@
 package com.ll.instagram.common;
 
+import com.ll.instagram.common.exception.BusinessException;
+import com.ll.instagram.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class FileServiceImpl implements FileService {
             String extension = getExtension(originalFilename);
 
             if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
-                throw new RuntimeException("invalid file extension");
+                throw new BusinessException(ErrorCode.INVALID_FILE_TYPE);
             }
 
             Path uploadPath = Paths.get(uploadDir);
